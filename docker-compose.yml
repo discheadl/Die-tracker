@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: activosdb
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dischead
+      POSTGRES_PASSWORD: R123456789
+      POSTGRES_DB: diedb
+    ports:
+    - "5432:5432"
+    volumes:
+    - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
