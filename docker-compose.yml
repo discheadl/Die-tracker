@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: dischead
-      POSTGRES_PASSWORD: R123456789
+      POSTGRES_PASSWORD: A123456789
       POSTGRES_DB: diedb
     ports:
     - "5432:5432"
