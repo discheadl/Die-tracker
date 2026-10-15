@@ -1,0 +1,30 @@
+<header class="hero-banner">
+  <div class="hero-banner-inner">
+    <nav class="nav-pill">
+      <a class="nav-pill-icon" routerLink="/dies">
+        <img src="img/icon.png" alt="" />
+      </a>
+
+      <a routerLink="/dies" [class.active]="isSearchActive()">Buscar dado</a>
+      <a routerLink="/escanear" [class.active]="isScanActive()">Escanear dado</a>
+      @if (!isOperator()) {
+        <a routerLink="/dies/listado" [class.active]="isListActive()">Todos los dados</a>
+        @if (isAdmin()) {
+          <a routerLink="/dies/nuevo" [class.active]="isCreateActive()">Nuevo dado</a>
+        }
+        <a routerLink="/dies/alertas" [class.active]="isAlertsActive()">Mantenimiento pendiente</a>
+        @if (isAdmin()) {
+          <a routerLink="/ubicaciones" [class.active]="isLocationsActive()">Ubicaciones</a>
+          <a routerLink="/usuarios" [class.active]="isUsersActive()">Usuarios</a>
+        }
+      }
+    </nav>
+
+    @if (user(); as u) {
+      <div class="account-chip">
+        <span class="account-name">{{ u.username }}</span>
+        <button type="button" class="account-logout" (click)="logout()">Salir</button>
+      </div>
+    }
+  </div>
+</header>

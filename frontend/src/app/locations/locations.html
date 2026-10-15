@@ -1,0 +1,101 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Ubicaciones</h1>
+    <p class="page-subtitle">Administra los almacenes y posiciones de prensa donde se guardan los dados.</p>
+  </header>
+
+  @if (errorMsg()) {
+    <p class="error-text">{{ errorMsg() }}</p>
+  }
+
+  <div class="card">
+    <div class="list-header">
+      <h2>Lugares registrados</h2>
+      @if (!addingNew() && editingId() === null) {
+        <button type="button" class="btn btn-primary" (click)="startAdd()">Agregar ubicación</button>
+      }
+    </div>
+
+    @if (addingNew()) {
+      <form class="edit-form" [formGroup]="form" (ngSubmit)="submit()">
+        <label>
+          Tipo
+          <select class="input-field" formControlName="type">
+            @for (opt of typeOptions; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Nombre
+          <input class="input-field" formControlName="name" placeholder="Ej. Almacén 1" />
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            <span class="field-error">Falta el nombre.</span>
+          }
+        </label>
+        <div class="form-actions field-full">
+          <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="saving()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving()">
+            {{ saving() ? 'Guardando...' : 'Guardar ubicación' }}
+          </button>
+        </div>
+      </form>
+    }
+
+    @if (loading()) {
+      <p class="muted">Cargando ubicaciones...</p>
+    } @else if (locations().length === 0 && !addingNew()) {
+      <p class="muted">Todavía no hay ubicaciones registradas.</p>
+    } @else {
+      <ul class="location-list">
+        @for (loc of locations(); track loc.id) {
+          @if (editingId() === loc.id) {
+            <li class="location-item">
+              <form class="edit-form" [formGroup]="form" (ngSubmit)="submit()">
+                <label>
+                  Tipo
+                  <select class="input-field" formControlName="type">
+                    @for (opt of typeOptions; track opt.value) {
+                      <option [value]="opt.value">{{ opt.label }}</option>
+                    }
+                  </select>
+                </label>
+                <label>
+                  Nombre
+                  <input class="input-field" formControlName="name" />
+                  @if (form.controls.name.touched && form.controls.name.invalid) {
+                    <span class="field-error">Falta el nombre.</span>
+                  }
+                </label>
+                <div class="form-actions field-full">
+                  <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="saving()">
+                    Cancelar
+                  </button>
+                  <button type="submit" class="btn btn-primary" [disabled]="saving()">
+                    {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
+                  </button>
+                </div>
+              </form>
+            </li>
+          } @else {
+            <li class="location-item">
+              <div class="location-main">
+                <span class="location-name">{{ loc.name }}</span>
+                <span class="location-type">{{ getLocationTypeLabel(loc.type) }}</span>
+                <span class="muted">
+                  {{ dieCount(loc.id) }} dado{{ dieCount(loc.id) === 1 ? '' : 's' }} asignado{{
+                    dieCount(loc.id) === 1 ? '' : 's'
+                  }}
+                </span>
+              </div>
+              <div class="location-actions">
+                <button type="button" class="btn btn-secondary" (click)="startEdit(loc)">Editar</button>
+                <button type="button" class="btn btn-danger" (click)="remove(loc)">Eliminar</button>
+              </div>
+            </li>
+          }
+        }
+      </ul>
+    }
+  </div>
+</section>

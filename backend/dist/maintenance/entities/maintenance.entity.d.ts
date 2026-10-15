@@ -10,5 +10,6 @@ export declare class Maintenance {
     type: MaintenanceType;
     hitsAtMaintenance: number;
     notes: string;
+    repairedBy: string;
     die: Die;
 }

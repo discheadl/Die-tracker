@@ -1,1 +1,35 @@
-<p>search-die works!</p>
+<section class="page">
+  <header class="page-header">
+    <h1>Buscar dado</h1>
+    <p class="page-subtitle">Escanea el QR del dado o búscalo por número, rotor o estator para consultar toda su información.</p>
+  </header>
+
+  <div class="search-die-layout">
+    <app-die-search-list
+      [dies]="dies()"
+      [loading]="loading()"
+      [errorMsg]="errorMsg()"
+      [selectedId]="selectedId()"
+      (select)="selectDie($event)"
+    />
+
+    <div class="detail-panel">
+      @if (selectedDie(); as die) {
+        <app-die-detail
+          [die]="die"
+          [locations]="locations()"
+          (updated)="onDieUpdated($event)"
+          (locationCreated)="onLocationCreated($event)"
+        />
+      } @else if (selectedId() !== null && !loading() && !errorMsg()) {
+        <div class="card empty-state">
+          <p class="muted">No se encontró el dado {{ selectedId() }}.</p>
+        </div>
+      } @else {
+        <div class="card empty-state">
+          <p class="muted">Selecciona un dado de la lista para ver su información completa.</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,81 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Usuarios</h1>
+    <p class="page-subtitle">Crea usuarios y otorga privilegios. Solo un administrador puede hacerlo.</p>
+  </header>
+
+  @if (errorMsg()) {
+    <p class="error-text">{{ errorMsg() }}</p>
+  }
+
+  <div class="card">
+    <h2>Nuevo usuario</h2>
+
+    <form class="create-form" [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        Usuario
+        <input class="input-field" formControlName="username" autocomplete="off" />
+        @if (form.controls.username.touched && form.controls.username.hasError('required')) {
+          <span class="field-error">Falta el nombre de usuario.</span>
+        }
+      </label>
+
+      <label>
+        Contraseña
+        <input class="input-field" type="password" formControlName="password" autocomplete="new-password" />
+        @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+          <span class="field-error">Falta la contraseña.</span>
+        } @else if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+          <span class="field-error">Debe tener al menos 8 caracteres.</span>
+        }
+      </label>
+
+      <label>
+        Rol
+        <select class="input-field" formControlName="role">
+          @for (opt of roleOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
+      </label>
+
+      <div class="form-actions field-full">
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          {{ saving() ? 'Creando...' : 'Crear usuario' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Usuarios registrados</h2>
+
+    @if (loading()) {
+      <p class="muted">Cargando usuarios...</p>
+    } @else if (users().length === 0) {
+      <p class="muted">Todavía no hay usuarios registrados.</p>
+    } @else {
+      <ul class="user-list">
+        @for (user of users(); track user.id) {
+          <li class="user-item">
+            <div class="user-main">
+              <span class="user-name">{{ user.username }}</span>
+              <span class="user-role">{{ getUserRoleLabel(user.role) }}</span>
+            </div>
+            <button type="button" class="btn btn-danger" (click)="requestDelete(user)">Eliminar</button>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  @if (pendingDelete(); as user) {
+    <app-confirm-dialog
+      title="Eliminar usuario"
+      [message]="'¿Eliminar al usuario \'' + user.username + '\'? Perderá acceso de inmediato.'"
+      confirmLabel="Eliminar"
+      (confirmed)="confirmDelete()"
+      (cancelled)="cancelDelete()"
+    />
+  }
+</section>

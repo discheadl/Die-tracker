@@ -1,0 +1,85 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Nuevo dado</h1>
+    <p class="page-subtitle">Registra un dado nuevo en el inventario.</p>
+  </header>
+
+  <div class="card">
+    @if (errorMsg()) {
+      <p class="error-text">{{ errorMsg() }}</p>
+    }
+
+    <form class="create-form" [formGroup]="form" (ngSubmit)="save()">
+      <label>
+        Número de dado
+        <input class="input-field" formControlName="dieNumber" />
+        @if (form.controls.dieNumber.touched && form.controls.dieNumber.hasError('required')) {
+          <span class="field-error">Falta el número de dado.</span>
+        }
+      </label>
+
+      <label>
+        Número de rotor
+        <input class="input-field" formControlName="rotorNumber" />
+      </label>
+
+      <label>
+        Número de estator
+        <input class="input-field" formControlName="statorNumber" />
+      </label>
+
+      <label>
+        Estado
+        <select class="input-field" formControlName="status">
+          @for (opt of statusOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Ubicación
+        <div class="location-field">
+          <select class="input-field" formControlName="locationId">
+            <option [ngValue]="null">Sin asignar</option>
+            @for (loc of locations(); track loc.id) {
+              <option [ngValue]="loc.id">{{ loc.name }}</option>
+            }
+          </select>
+          <button type="button" class="btn btn-secondary location-add-btn" (click)="openLocationModal()">
+            + Nueva
+          </button>
+        </div>
+      </label>
+
+      <label>
+        Golpes (hits)
+        <input class="input-field" type="number" min="0" formControlName="hits" />
+        @if (form.controls.hits.touched && form.controls.hits.invalid) {
+          <span class="field-error">Ingresa un número de golpes válido (0 o más).</span>
+        }
+      </label>
+
+      <label>
+        Umbral de golpes
+        <input class="input-field" type="number" min="0" formControlName="hitsThreshold" />
+      </label>
+
+      <label class="field-full">
+        Notas
+        <textarea class="input-field" rows="3" formControlName="notes"></textarea>
+      </label>
+
+      <div class="form-actions field-full">
+        <a class="btn btn-secondary" routerLink="/dies">Cancelar</a>
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          {{ saving() ? 'Creando...' : 'Crear dado' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  @if (showLocationModal()) {
+    <app-location-form-modal (close)="closeLocationModal()" (created)="onLocationCreated($event)" />
+  }
+</section>

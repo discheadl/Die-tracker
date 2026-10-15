@@ -1,0 +1,64 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Mantenimiento pendiente</h1>
+    <p class="page-subtitle">
+      Dados que alcanzaron el 90% o más de su umbral de golpes, con prioridad según qué tan cerca están del límite.
+    </p>
+  </header>
+
+  @if (errorMsg()) {
+    <p class="error-text">{{ errorMsg() }}</p>
+  }
+
+  @if (!loading() && alerts().length > 0) {
+    <div class="card summary-card">
+      <span class="summary-chip priority-low">{{ lowCount() }} prioridad baja</span>
+      <span class="summary-chip priority-medium">{{ mediumCount() }} prioridad media</span>
+      <span class="summary-chip priority-high">{{ highCount() }} prioridad alta</span>
+    </div>
+  }
+
+  <div class="card">
+    @if (loading()) {
+      <p class="muted">Cargando dados...</p>
+    } @else if (alerts().length === 0) {
+      <p class="muted">No hay dados cerca de su umbral de mantenimiento.</p>
+    } @else {
+      <ul class="alert-list">
+        @for (alert of alerts(); track alert.die.id) {
+          <li class="alert-item" [class]="'priority-' + alert.priority">
+            <div class="alert-main">
+              <div class="alert-title">
+                <span class="die-number">{{ alert.die.dieNumber }}</span>
+                <span class="status-badge" [class]="'status-' + alert.die.status">
+                  {{ getDieStatusLabel(alert.die.status) }}
+                </span>
+                <span class="alert-flag" [class]="'priority-' + alert.priority">
+                  Prioridad {{ getMaintenanceTypeLabel(alert.priority) }}
+                </span>
+              </div>
+              <span class="muted">
+                {{ alert.die.hits }} / {{ alert.die.hitsThreshold }} golpes ({{ alert.percentage }}%)
+              </span>
+              <div class="progress-track">
+                <div
+                  class="progress-fill"
+                  [class]="'priority-' + alert.priority"
+                  [style.width.%]="alert.percentage > 100 ? 100 : alert.percentage"
+                ></div>
+              </div>
+            </div>
+            <div class="alert-actions">
+              <button type="button" class="btn btn-secondary" (click)="goToDie(alert.die.id)">Ver dado</button>
+              @if (canManage()) {
+                <button type="button" class="btn btn-primary" (click)="goToMaintenance(alert.die.id)">
+                  Registrar mantenimiento
+                </button>
+              }
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</section>

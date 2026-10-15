@@ -1,0 +1,20 @@
+.search-die-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  text-align: center;
+}
+
+@media (max-width: 800px) {
+  .search-die-layout {
+    grid-template-columns: 1fr;
+  }
+}

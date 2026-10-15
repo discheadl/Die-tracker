@@ -1,0 +1,158 @@
+@let d = die();
+
+<div class="card die-detail">
+  <div class="die-detail-header">
+    <div class="die-detail-title">
+      <h2>Dado {{ d.dieNumber }}</h2>
+      <span class="status-badge" [class]="'status-' + d.status">{{ getDieStatusLabel(d.status) }}</span>
+    </div>
+
+    <div class="die-detail-actions">
+      <a class="btn btn-secondary" [routerLink]="['/dies', d.id, 'maintenance']">
+        Historial de mantenimiento
+      </a>
+      @if (!editing() && canEdit()) {
+        <button type="button" class="btn btn-primary" (click)="startEdit()">Editar</button>
+      }
+    </div>
+  </div>
+
+  @if (errorMsg()) {
+    <p class="error-text">{{ errorMsg() }}</p>
+  }
+
+  @if (!editing()) {
+    <dl class="detail-grid">
+      <div class="detail-item">
+        <dt>Número de rotor</dt>
+        <dd>{{ d.rotorNumber || 'Sin dato' }}</dd>
+      </div>
+      <div class="detail-item">
+        <dt>Número de estator</dt>
+        <dd>{{ d.statorNumber || 'Sin dato' }}</dd>
+      </div>
+      <div class="detail-item">
+        <dt>Ubicación</dt>
+        <dd>{{ d.location?.name ?? 'Sin asignar' }}</dd>
+      </div>
+      <div class="detail-item">
+        <dt>Golpes (hits)</dt>
+        <dd>
+          {{ d.hits }}
+          @if (d.hitsThreshold) {
+            <span class="muted"> / {{ d.hitsThreshold }}</span>
+          }
+        </dd>
+      </div>
+      <div class="detail-item detail-item-full">
+        <dt>Notas</dt>
+        <dd>{{ d.notes || 'Sin notas' }}</dd>
+      </div>
+    </dl>
+
+    @if (hitsPercentage(); as pct) {
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="pct"></div>
+      </div>
+    }
+  } @else {
+    <form class="edit-form" [formGroup]="form" (ngSubmit)="save()">
+      @if (canEditFull()) {
+        <label>
+          Número de dado
+          <input class="input-field" formControlName="dieNumber" />
+          @if (form.controls.dieNumber.touched && form.controls.dieNumber.hasError('required')) {
+            <span class="field-error">Falta el número de dado.</span>
+          }
+        </label>
+
+        <label>
+          Número de rotor <span class="optional-tag">(opcional)</span>
+          <input class="input-field" formControlName="rotorNumber" />
+        </label>
+
+        <label>
+          Número de estator <span class="optional-tag">(opcional)</span>
+          <input class="input-field" formControlName="statorNumber" />
+        </label>
+
+        <label>
+          Estado
+          <select class="input-field" formControlName="status">
+            @for (opt of statusOptions; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          Ubicación <span class="optional-tag">(opcional)</span>
+          <div class="location-field">
+            <select class="input-field" formControlName="locationId">
+              <option [ngValue]="null">Sin asignar</option>
+              @for (loc of availableLocations(); track loc.id) {
+                <option [ngValue]="loc.id">{{ loc.name }}</option>
+              }
+            </select>
+            <button type="button" class="btn btn-secondary location-add-btn" (click)="openLocationModal()">
+              + Nueva
+            </button>
+          </div>
+        </label>
+      }
+
+      <label>
+        Golpes (hits)
+        <input class="input-field" type="number" [attr.min]="canEditFull() ? 0 : d.hits" formControlName="hits" />
+        @if (form.controls.hits.touched && form.controls.hits.hasError('required')) {
+          <span class="field-error">Ingresa los golpes (hits).</span>
+        } @else if (form.controls.hits.touched && form.controls.hits.hasError('min')) {
+          <span class="field-error">
+            @if (canEditFull()) {
+              Los golpes no pueden ser negativos.
+            } @else {
+              No puedes registrar menos de {{ d.hits }} golpes, ese es el valor actual.
+            }
+          </span>
+        }
+      </label>
+
+      @if (canEditFull()) {
+        <label>
+          Umbral de golpes <span class="optional-tag">(opcional)</span>
+          <input class="input-field" type="number" min="0" formControlName="hitsThreshold" />
+        </label>
+      }
+
+      <label class="field-full">
+        Notas <span class="optional-tag">(opcional)</span>
+        <textarea class="input-field" rows="3" formControlName="notes"></textarea>
+      </label>
+
+      <div class="form-actions field-full">
+        <button type="button" class="btn btn-secondary" (click)="cancelEdit()" [disabled]="saving()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
+    </form>
+  }
+</div>
+
+@if (showLocationModal()) {
+  <app-location-form-modal (close)="closeLocationModal()" (created)="onLocationCreated($event)" />
+}
+
+@if (pendingChange()) {
+  <app-confirm-dialog
+    title="Confirmar registro"
+    [message]="pendingChangeMessage()"
+    confirmLabel="Sí, guardar"
+    cancelLabel="Revisar de nuevo"
+    [danger]="false"
+    (confirmed)="confirmPendingChange()"
+    (cancelled)="cancelPendingChange()"
+  />
+}

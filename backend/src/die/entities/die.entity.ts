@@ -17,10 +17,10 @@ export class Die {
     @Column({ unique: true, name: "die_number" })
     dieNumber: string;
 
-    @Column({ name: "rotor_number" })
+    @Column({ name: "rotor_number", nullable: true })
     rotorNumber: string;
 
-    @Column({ name: "stator_number" })
+    @Column({ name: "stator_number", nullable: true })
     statorNumber: string;
 
     @Column({ type: "enum", enum: DieStatus })
@@ -29,8 +29,8 @@ export class Die {
     @OneToMany(() => Maintenance, (maintenance) => maintenance.die)
     maintenance: Maintenance[];
 
-    @ManyToOne(() => Location, (location) => location.dies)
-    location: Location;
+    @ManyToOne(() => Location, (location) => location.dies, { nullable: true })
+    location: Location | null;
 
     @Column({ default: 0 })
     hits: number;

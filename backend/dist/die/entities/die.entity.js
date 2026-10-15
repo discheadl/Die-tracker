@@ -41,11 +41,11 @@ __decorate([
     __metadata("design:type", String)
 ], Die.prototype, "dieNumber", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: "rotor_number" }),
+    (0, typeorm_1.Column)({ name: "rotor_number", nullable: true }),
     __metadata("design:type", String)
 ], Die.prototype, "rotorNumber", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: "stator_number" }),
+    (0, typeorm_1.Column)({ name: "stator_number", nullable: true }),
     __metadata("design:type", String)
 ], Die.prototype, "statorNumber", void 0);
 __decorate([
@@ -57,8 +57,8 @@ __decorate([
     __metadata("design:type", Array)
 ], Die.prototype, "maintenance", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => location_entity_1.Location, (location) => location.dies),
-    __metadata("design:type", location_entity_1.Location)
+    (0, typeorm_1.ManyToOne)(() => location_entity_1.Location, (location) => location.dies, { nullable: true }),
+    __metadata("design:type", Object)
 ], Die.prototype, "location", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),

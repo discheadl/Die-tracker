@@ -1,0 +1,26 @@
+.scan-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.scan-label {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.scan-input {
+  font-size: 22px;
+  padding: 16px;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.scan-help {
+  text-align: center;
+  font-size: 13px;
+}

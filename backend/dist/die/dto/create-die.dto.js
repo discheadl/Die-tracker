@@ -30,10 +30,12 @@ __decorate([
 ], CreateDieDto.prototype, "dieNumber", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateDieDto.prototype, "rotorNumber", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateDieDto.prototype, "statorNumber", void 0);
 __decorate([
@@ -42,6 +44,7 @@ __decorate([
 ], CreateDieDto.prototype, "status", void 0);
 __decorate([
     (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], CreateDieDto.prototype, "locationId", void 0);
 __decorate([

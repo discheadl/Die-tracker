@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { SearchDie } from './search-die';
 
 describe('SearchDie', () => {
@@ -8,6 +10,7 @@ describe('SearchDie', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SearchDie],
+      providers: [provideHttpClient(), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SearchDie);

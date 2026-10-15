@@ -6,6 +6,8 @@ import { AppService } from './app.service';
 import { DiesModule } from './die/die.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
 import { LocationsModule } from './locations/locations.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { LocationsModule } from './locations/locations.module';
     DiesModule,
     MaintenanceModule,
     LocationsModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

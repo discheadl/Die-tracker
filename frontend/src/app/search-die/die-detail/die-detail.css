@@ -1,0 +1,86 @@
+.die-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.die-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.die-detail-title {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.die-detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.detail-grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+
+.detail-item dt {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 2px;
+}
+
+.detail-item dd {
+  margin: 0;
+  font-size: 16px;
+  color: var(--color-text-primary);
+}
+
+.detail-item-full {
+  grid-column: 1 / -1;
+}
+
+.edit-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.field-full {
+  grid-column: 1 / -1;
+}
+
+.location-field {
+  display: flex;
+  gap: 8px;
+}
+
+.location-field .input-field {
+  flex: 1 1 auto;
+}
+
+.location-add-btn {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .detail-grid,
+  .edit-form {
+    grid-template-columns: 1fr;
+  }
+}

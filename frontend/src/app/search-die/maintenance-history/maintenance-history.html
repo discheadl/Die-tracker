@@ -1,0 +1,121 @@
+<section class="page">
+  <a class="back-link" [routerLink]="['/dies', dieId()]">&larr; Volver al dado</a>
+
+  <header class="page-header die-context">
+    <p class="eyebrow">Historial de mantenimiento</p>
+    @if (die(); as d) {
+      <div class="die-context-title">
+        <h1>Dado {{ d.dieNumber }}</h1>
+        <span class="status-badge" [class]="'status-' + d.status">{{ getDieStatusLabel(d.status) }}</span>
+      </div>
+    } @else {
+      <h1>Historial de mantenimiento</h1>
+    }
+    <p class="page-subtitle">Consulta y edita los mantenimientos realizados a este dado.</p>
+  </header>
+
+  @if (errorMsg()) {
+    <p class="error-text">{{ errorMsg() }}</p>
+  }
+
+  <div class="card">
+    <div class="list-header">
+      <h2>Registros</h2>
+      @if (canManage() && !addingNew() && editingId() === null) {
+        <button type="button" class="btn btn-primary" (click)="startAdd()">Agregar mantenimiento</button>
+      }
+    </div>
+
+    @if (addingNew()) {
+      <form class="edit-form" [formGroup]="form" (ngSubmit)="submit()">
+        <label>
+          Fecha
+          <input class="input-field" type="date" formControlName="performedAt" />
+          @if (form.controls.performedAt.touched && form.controls.performedAt.invalid) {
+            <span class="field-error">Selecciona una fecha.</span>
+          }
+        </label>
+        <label>
+          Golpes al momento del mantenimiento
+          <input class="input-field" type="number" min="0" formControlName="hitsAtMaintenance" />
+          @if (form.controls.hitsAtMaintenance.touched && form.controls.hitsAtMaintenance.invalid) {
+            <span class="field-error">Ingresa un número de golpes válido (0 o más).</span>
+          }
+        </label>
+        <label class="field-full">
+          Notas
+          <textarea class="input-field" rows="2" formControlName="notes"></textarea>
+        </label>
+        <div class="form-actions field-full">
+          <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="saving()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving()">
+            {{ saving() ? 'Guardando...' : 'Guardar registro' }}
+          </button>
+        </div>
+      </form>
+    }
+
+    @if (loading()) {
+      <p class="muted">Cargando historial...</p>
+    } @else if (sortedRecords().length === 0 && !addingNew()) {
+      <p class="muted">Todavía no hay mantenimientos registrados para este dado.</p>
+    } @else {
+      <ul class="maintenance-list">
+        @for (record of sortedRecords(); track record.id) {
+          @if (editingId() === record.id) {
+            <li class="maintenance-item">
+              <form class="edit-form" [formGroup]="form" (ngSubmit)="submit()">
+                <label>
+                  Fecha
+                  <input class="input-field" type="date" formControlName="performedAt" />
+                  @if (form.controls.performedAt.touched && form.controls.performedAt.invalid) {
+                    <span class="field-error">Selecciona una fecha.</span>
+                  }
+                </label>
+                <label>
+                  Golpes al momento del mantenimiento
+                  <input class="input-field" type="number" min="0" formControlName="hitsAtMaintenance" />
+                  @if (form.controls.hitsAtMaintenance.touched && form.controls.hitsAtMaintenance.invalid) {
+                    <span class="field-error">Ingresa un número de golpes válido (0 o más).</span>
+                  }
+                </label>
+                <label class="field-full">
+                  Notas
+                  <textarea class="input-field" rows="2" formControlName="notes"></textarea>
+                </label>
+                <div class="form-actions field-full">
+                  <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="saving()">
+                    Cancelar
+                  </button>
+                  <button type="submit" class="btn btn-primary" [disabled]="saving()">
+                    {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
+                  </button>
+                </div>
+              </form>
+            </li>
+          } @else {
+            <li class="maintenance-item">
+              <div class="maintenance-item-main">
+                <span class="maintenance-date">{{ record.performedAt | slice: 0 : 10 }}</span>
+                <span class="muted">{{ record.hitsAtMaintenance }} golpes</span>
+              </div>
+              @if (record.notes) {
+                <p class="maintenance-notes">{{ record.notes }}</p>
+              }
+              @if (canManage() || isAdmin()) {
+                <div class="maintenance-item-actions">
+                  @if (canManage()) {
+                    <button type="button" class="btn btn-secondary" (click)="startEdit(record)">Editar</button>
+                  }
+                  @if (isAdmin()) {
+                    <button type="button" class="btn btn-danger" (click)="remove(record.id)">Eliminar</button>
+                  }
+                </div>
+              }
+            </li>
+          }
+        }
+      </ul>
+    }
+  </div>
+</section>

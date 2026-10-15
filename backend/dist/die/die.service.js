@@ -27,9 +27,12 @@ let DiesService = class DiesService {
     }
     async create(createDieDto) {
         const { locationId, ...dieData } = createDieDto;
-        const location = await this.locationRepo.findOneBy({ id: locationId });
-        if (!location)
-            throw new common_1.NotFoundException(`Location ${locationId} not found`);
+        let location = null;
+        if (locationId !== undefined) {
+            location = await this.locationRepo.findOneBy({ id: locationId });
+            if (!location)
+                throw new common_1.NotFoundException(`Location ${locationId} not found`);
+        }
         const die = this.dieRepo.create({ ...dieData, location });
         return this.dieRepo.save(die);
     }

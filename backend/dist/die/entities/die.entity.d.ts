@@ -12,7 +12,7 @@ export declare class Die {
     statorNumber: string;
     status: DieStatus;
     maintenance: Maintenance[];
-    location: Location;
+    location: Location | null;
     hits: number;
     hitsThreshold: number;
     notes: string;

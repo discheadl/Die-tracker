@@ -17,6 +17,10 @@ const common_1 = require("@nestjs/common");
 const die_service_1 = require("./die.service");
 const create_die_dto_1 = require("./dto/create-die.dto");
 const update_die_dto_1 = require("./dto/update-die.dto");
+const roles_decorator_1 = require("../auth/decorators/roles.decorator");
+const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
+const user_entity_1 = require("../users/entities/user.entity");
+const OPERATOR_ALLOWED_FIELDS = ['hits', 'notes'];
 let DiesController = class DiesController {
     dieService;
     constructor(dieService) {
@@ -31,7 +35,24 @@ let DiesController = class DiesController {
     findOne(id) {
         return this.dieService.findOne(+id);
     }
-    update(id, updateDieDto) {
+    async update(id, updateDieDto, user) {
+        if (user.role === user_entity_1.UserRole.MAINTENANCE) {
+            throw new common_1.ForbiddenException('Tu rol no puede editar dados');
+        }
+        if (user.role === user_entity_1.UserRole.OPERATOR) {
+            const disallowed = Object.keys(updateDieDto).filter((key) => !OPERATOR_ALLOWED_FIELDS.includes(key));
+            if (disallowed.length > 0) {
+                throw new common_1.ForbiddenException('Como operador solo puedes registrar golpes y notas');
+            }
+            if (updateDieDto.hits !== undefined) {
+                const currentDie = await this.dieService.findOne(+id);
+                if (!currentDie)
+                    throw new common_1.NotFoundException(`Die ${id} not found`);
+                if (updateDieDto.hits < currentDie.hits) {
+                    throw new common_1.ForbiddenException('No puedes registrar menos golpes de los que ya tiene el dado');
+                }
+            }
+        }
         return this.dieService.update(+id, updateDieDto);
     }
     remove(id) {
@@ -40,6 +61,7 @@ let DiesController = class DiesController {
 };
 exports.DiesController = DiesController;
 __decorate([
+    (0, roles_decorator_1.Roles)(user_entity_1.UserRole.ADMIN),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -63,11 +85,13 @@ __decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_die_dto_1.UpdateDieDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [String, update_die_dto_1.UpdateDieDto, Object]),
+    __metadata("design:returntype", Promise)
 ], DiesController.prototype, "update", null);
 __decorate([
+    (0, roles_decorator_1.Roles)(user_entity_1.UserRole.ADMIN),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),

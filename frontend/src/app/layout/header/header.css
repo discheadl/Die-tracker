@@ -1,0 +1,126 @@
+.hero-banner {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 16px 24px;
+}
+
+.hero-banner-inner {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.nav-pill {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px;
+  background: var(--glass-nav-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-nav-border);
+  border-radius: var(--radius-2xl);
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px 0px;
+}
+
+.account-chip {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 16px;
+  background: var(--glass-nav-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-nav-border);
+  border-radius: var(--radius-2xl);
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px 0px;
+}
+
+.account-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.account-logout {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: var(--radius-lg);
+}
+
+.account-logout:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.nav-pill a {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: var(--radius-lg);
+  white-space: nowrap;
+}
+
+.nav-pill a:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.nav-pill a.active {
+  color: var(--color-selected);
+  background: var(--color-selected-soft);
+}
+
+.nav-pill-icon {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px 6px 14px !important;
+  margin-right: 4px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0 !important;
+}
+
+.nav-pill-icon:hover {
+  background: transparent !important;
+}
+
+.nav-pill-icon img {
+  height: 24px;
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 720px) {
+  .hero-banner-inner {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-pill a {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .nav-pill-icon img {
+    height: 20px;
+  }
+}

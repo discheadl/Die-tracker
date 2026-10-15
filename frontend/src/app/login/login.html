@@ -1,0 +1,25 @@
+<div class="login-screen">
+  <div class="card login-card">
+    <img class="login-logo" src="img/logo.webp" alt="Logo de la compañía" />
+
+    @if (errorMsg()) {
+      <p class="error-text">{{ errorMsg() }}</p>
+    }
+
+    <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        Usuario
+        <input class="input-field" formControlName="username" autocomplete="username" />
+      </label>
+
+      <label>
+        Contraseña
+        <input class="input-field" type="password" formControlName="password" autocomplete="current-password" />
+      </label>
+
+      <button type="submit" class="btn btn-primary login-submit" [disabled]="loading()">
+        {{ loading() ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+    </form>
+  </div>
+</div>

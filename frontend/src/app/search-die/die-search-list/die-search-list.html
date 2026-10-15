@@ -1,0 +1,34 @@
+<div class="card search-panel">
+  <input
+    class="input-field"
+    type="search"
+    placeholder="Buscar por número de dado, rotor o estator..."
+    [value]="searchTerm()"
+    (input)="onSearchInput($event)"
+    (keydown.enter)="onEnter()"
+  />
+
+  @if (loading()) {
+    <p class="muted">Cargando dados...</p>
+  } @else if (errorMsg()) {
+    <p class="error-text">{{ errorMsg() }}</p>
+  } @else if (filteredDies().length === 0) {
+    <p class="muted">No se encontraron dados.</p>
+  } @else {
+    <ul class="die-list">
+      @for (die of filteredDies(); track die.id) {
+        <li>
+          <button
+            type="button"
+            class="die-list-item"
+            [class.active]="die.id === selectedId()"
+            (click)="select.emit(die.id)"
+          >
+            <span class="die-number">{{ die.dieNumber }}</span>
+            <span class="status-badge" [class]="'status-' + die.status">{{ statusLabel(die.status) }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</div>

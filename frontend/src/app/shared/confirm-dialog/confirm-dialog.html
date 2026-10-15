@@ -1,0 +1,27 @@
+<div
+  class="modal-backdrop"
+  role="presentation"
+  tabindex="-1"
+  (click)="onBackdropClick($event)"
+  (keydown)="onKeydown($event)"
+>
+  <div class="card glass-light modal-card" role="alertdialog" aria-modal="true" [attr.aria-label]="title()">
+    <div class="modal-header">
+      <h2>{{ title() }}</h2>
+      <button type="button" class="modal-close" (click)="cancelled.emit()" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <p class="confirm-message">{{ message() }}</p>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" (click)="cancelled.emit()">{{ cancelLabel() }}</button>
+      <button
+        type="button"
+        [class]="danger() ? 'btn btn-danger' : 'btn btn-primary'"
+        (click)="confirmed.emit()"
+      >
+        {{ confirmLabel() }}
+      </button>
+    </div>
+  </div>
+</div>

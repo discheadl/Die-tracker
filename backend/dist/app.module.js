@@ -15,6 +15,8 @@ const app_service_1 = require("./app.service");
 const die_module_1 = require("./die/die.module");
 const maintenance_module_1 = require("./maintenance/maintenance.module");
 const locations_module_1 = require("./locations/locations.module");
+const users_module_1 = require("./users/users.module");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -41,6 +43,8 @@ exports.AppModule = AppModule = __decorate([
             die_module_1.DiesModule,
             maintenance_module_1.MaintenanceModule,
             locations_module_1.LocationsModule,
+            users_module_1.UsersModule,
+            auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

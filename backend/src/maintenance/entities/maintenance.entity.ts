@@ -24,6 +24,9 @@ export class Maintenance {
     @Column({ type: "text", nullable: true })
     notes: string;
 
+    @Column({ type: "text", nullable: true })
+    repairedBy: string;
+
     @ManyToOne(() => Die, (die) => die.maintenance)
     die: Die;
 }

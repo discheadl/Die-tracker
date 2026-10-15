@@ -17,6 +17,8 @@ const common_1 = require("@nestjs/common");
 const maintenance_service_1 = require("./maintenance.service");
 const create_maintenance_dto_1 = require("./dto/create-maintenance.dto");
 const update_maintenance_dto_1 = require("./dto/update-maintenance.dto");
+const roles_decorator_1 = require("../auth/decorators/roles.decorator");
+const user_entity_1 = require("../users/entities/user.entity");
 let MaintenanceController = class MaintenanceController {
     maintenanceService;
     constructor(maintenanceService) {
@@ -40,6 +42,7 @@ let MaintenanceController = class MaintenanceController {
 };
 exports.MaintenanceController = MaintenanceController;
 __decorate([
+    (0, roles_decorator_1.Roles)(user_entity_1.UserRole.MAINTENANCE),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -60,6 +63,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], MaintenanceController.prototype, "findOne", null);
 __decorate([
+    (0, roles_decorator_1.Roles)(user_entity_1.UserRole.MAINTENANCE),
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -68,6 +72,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], MaintenanceController.prototype, "update", null);
 __decorate([
+    (0, roles_decorator_1.Roles)(user_entity_1.UserRole.ADMIN),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),

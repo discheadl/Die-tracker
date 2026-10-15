@@ -24,6 +24,7 @@ let Maintenance = class Maintenance {
     type;
     hitsAtMaintenance;
     notes;
+    repairedBy;
     die;
 };
 exports.Maintenance = Maintenance;
@@ -47,6 +48,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: "text", nullable: true }),
     __metadata("design:type", String)
 ], Maintenance.prototype, "notes", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "text", nullable: true }),
+    __metadata("design:type", String)
+], Maintenance.prototype, "repairedBy", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => die_entity_1.Die, (die) => die.maintenance),
     __metadata("design:type", die_entity_1.Die)

@@ -8,16 +8,19 @@ export class CreateDieDto {
     dieNumber: string
 
     @IsString()
-    rotorNumber: string
+    @IsOptional()
+    rotorNumber?: string
 
     @IsString()
-    statorNumber: string
+    @IsOptional()
+    statorNumber?: string
 
     @IsEnum(DieStatus)
     status: DieStatus
 
     @IsInt()
-    locationId: number
+    @IsOptional()
+    locationId?: number
 
     @IsNumber()
     @Min(0)

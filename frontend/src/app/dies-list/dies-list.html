@@ -1,0 +1,112 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Todos los dados</h1>
+    <p class="page-subtitle">Consulta el inventario completo, filtra por estado o ubicación y ordena por golpes.</p>
+  </header>
+
+  @if (errorMsg()) {
+    <p class="error-text">{{ errorMsg() }}</p>
+  }
+
+  <div class="card filters-card">
+    <div class="filters-row">
+      <label class="filter-field">
+        Estado
+        <select class="input-field" [value]="statusFilter()" (change)="onStatusFilterChange($event)">
+          <option value="">Todos</option>
+          @for (opt of statusOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="filter-field">
+        Ubicación
+        <select class="input-field" [value]="locationFilter()" (change)="onLocationFilterChange($event)">
+          <option value="">Todas</option>
+          @for (loc of locations(); track loc.id) {
+            <option [value]="loc.id">{{ loc.name }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="filter-field">
+        Ordenar por
+        <select class="input-field" [value]="sortBy()" (change)="onSortChange($event)">
+          <option value="hits-desc">Golpes (mayor a menor)</option>
+          <option value="hits-asc">Golpes (menor a mayor)</option>
+          <option value="dieNumber">Número de dado</option>
+        </select>
+      </label>
+
+      <button type="button" class="btn btn-secondary clear-btn" (click)="clearFilters()">Limpiar filtros</button>
+    </div>
+  </div>
+
+  <div class="card">
+    @if (loading()) {
+      <p class="muted">Cargando dados...</p>
+    } @else if (filteredDies().length === 0) {
+      <p class="muted">No hay dados que coincidan con los filtros seleccionados.</p>
+    } @else {
+      <div class="table-wrap">
+        <table class="dies-table">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Rotor</th>
+              <th>Estator</th>
+              <th>Estado</th>
+              <th>Ubicación</th>
+              <th>Golpes</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (die of filteredDies(); track die.id) {
+              <tr (click)="viewDie(die.id)">
+                <td class="die-number">{{ die.dieNumber }}</td>
+                <td>{{ die.rotorNumber || '—' }}</td>
+                <td>{{ die.statorNumber || '—' }}</td>
+                <td>
+                  <span class="status-badge" [class]="'status-' + die.status">{{ getDieStatusLabel(die.status) }}</span>
+                </td>
+                <td>{{ die.location?.name ?? 'Sin asignar' }}</td>
+                <td class="hits-cell">
+                  <span>{{ die.hits }}@if (die.hitsThreshold) {<span class="muted"> / {{ die.hitsThreshold }}</span>}</span>
+                  @if (hitsPercentage(die); as pct) {
+                    <div class="progress-track mini">
+                      <div class="progress-fill" [style.width.%]="pct"></div>
+                    </div>
+                  }
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button type="button" class="btn btn-primary" (click)="viewDie(die.id); $event.stopPropagation()">
+                      Ver
+                    </button>
+                    @if (isAdmin()) {
+                      <button type="button" class="btn btn-danger" (click)="requestDelete($event, die)">
+                        Eliminar
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  @if (pendingDelete(); as die) {
+    <app-confirm-dialog
+      title="Eliminar dado"
+      [message]="'¿Eliminar el dado ' + die.dieNumber + '? Esta acción no se puede deshacer.'"
+      confirmLabel="Eliminar"
+      (confirmed)="confirmDelete()"
+      (cancelled)="cancelDelete()"
+    />
+  }
+</section>
